@@ -23,6 +23,23 @@ rm(installedPackages, packageName, packagesNeeded, packageExists)
 ##### Add here the external files ##############################################
 sourceCpp("find_pi_rcpp.cpp")
 ################################################################################
+#### convertire R code to Rcpp
+
+rcppFunction(' double inside_unit_circle(NumericVector x){
+   
+ double d= x[0]*x[0]+x[1]*x[1];
+   return d;
+   }
+
+
+double find_pi_cpp (int B = 5000, int seed = 10){
+  
+   NumericMatrix point(runif(2*B,-1,1),B,2);
+  
+  NumericVector nb_inside = apply_cpp(point,1,inside_unit_circle);
+    double pi_hate =sum(nb_inside)/B;
+    return 4*pi_hate;
+}')
 
 ######## [END] Requirements ########
 
