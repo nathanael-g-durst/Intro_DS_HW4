@@ -26,7 +26,9 @@ sourceCpp("find_pi_rcpp.cpp")
 
 ######## [END] Requirements ########
 
-######## [START] R Functions ########
+################################################################################
+
+######## [START] R Monte Carlo ########
 
 ########## [START] inside_unit_circle ##########
 
@@ -56,7 +58,53 @@ find_pi = function(B = 5000, seed = 10){
 
 ########## [END] find_pi ##########
 
+######## [END] R Monte Carlo ########
+
+################################################################################
+
+######## [START] Check same results ########
+
+########## [START] Check same results ##########
+
+all_monte_carlo_size = 10^(0:6)
+l_monte_carlo_size = length(all_monte_carlo_size)
+for(monte_carlo_size_i in 1:l_monte_carlo_size){
+  monte_carlo_size = all_monte_carlo_size[monte_carlo_size_i]
+  # create res pi
+  res_pi = vector("logical", length = 10)
+  for(simu_i in seq(10)){
+    seed_i = 123 + simu_i
+    pi_r = find_pi(monte_carlo_size, seed=seed_i)
+    pi_cpp = find_pi_cpp(monte_carlo_size, seed=seed_i)
+    # test equality
+    res_pi[simu_i] = all.equal(pi_r, pi_cpp)
+  }
+  # check if all elements are true
+  print(all(res_pi))
+}
+
+########## [END] Check same results ##########
+
+########## [START] Graph ##########
+
+########## [END] Graph ##########
+
+######## [END] Check same results ########
+
+################################################################################
+
+######## [START] Benchmark ########
+
+########## [START] Benchmark ##########
 
 
 
+########## [END] Benchmark ##########
 
+########## [START] Graph ##########
+
+
+
+########## [END] Graph ##########
+
+######## [END] Benchmark ########
