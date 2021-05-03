@@ -1,7 +1,7 @@
 ######## [START] Requirements ########
 
 ##### Add here the packages needed #############################################
-packagesNeeded <- c("Rcpp", "RcppArmadillo")
+packagesNeeded <- c("Rcpp", "RcppArmadillo", "microbenchmark")
 ################################################################################
 
 installedPackages <- installed.packages()
@@ -97,8 +97,7 @@ for(monte_carlo_size_i in 1:l_monte_carlo_size){
 
 ########## [START] Benchmark ##########
 
-mbmark = microbenchmark::microbenchmark(find_pi(B = 10^5, seed = 10),
-                               find_pi_cpp(B = 10^5, seed = 10))
+mbmark = microbenchmark::microbenchmark(find_pi(B = 10^5, seed = 10), find_pi_cpp(B = 10^5, seed = 10))
 
 mbdf = summary(mbmark)
 

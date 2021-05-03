@@ -1,27 +1,23 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
 
-//######## [START] C++ Monte Carlo ##########
-
+// set seed
 // [[Rcpp::export]]
-double find_pi_cpp(const int B, int seed) {
-  setSeed(seed);
-  NumericVector x = runif(B);
-  NumericVector y = runif(B);
-  NumericVector d = sqrt(x*x + y*y);
+void set_seed(double seed) {
+  Rcpp::Environment base_env("package:base");
+  Rcpp::Function set_seed_r = base_env["set.seed"];
+  set_seed_r(std::floor(std::fabs(seed)));
+}
+
+// monte carlo
+// [[Rcpp::export]]
+double find_pi_cpp(const int B, double seed) {
+  set_seed(seed);
+  Rcpp::NumericVector x;
+  Rcpp::NumericVector y;
+  Rcpp::NumericVector d;
+  x = Rcpp::runif(B);
+  y = Rcpp::runif(B);
+  d = Rcpp::sqrt(x*x + y*y);
   return 4.0 * sum(d < 1.0) / B;
 }
-
-double inside_unit_circle(NumericVector x){
-  double d= x[0]*x[0]+x[1]*x[1];
-  return d;
-}
-
-double find_pi_cppp (int B = 5000, int seed = 10){
-  NumericMatrix point(runif(2*B,-1,1),B,2);
-  NumericVector nb_inside = apply_cpp(point,1,inside_unit_circle);
-  double pi_hate =sum(nb_inside)/B;
-  return 4*pi_hate;
-}
-
-//######## [END] C++ Monte Carlo ##########
