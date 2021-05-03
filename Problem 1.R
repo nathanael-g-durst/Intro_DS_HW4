@@ -97,7 +97,8 @@ for(monte_carlo_size_i in 1:l_monte_carlo_size){
 
 ########## [START] Benchmark ##########
 
-
+microbenchmark::microbenchmark(find_pi(B = 10^5, seed = 10),
+                               find_pi_cpp(B = 10^5, seed = 10))
 
 ########## [END] Benchmark ##########
 
