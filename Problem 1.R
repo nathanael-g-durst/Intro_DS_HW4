@@ -105,9 +105,10 @@ mbdf = summary(mbmark)
 meanpir = mbdf$mean[1]
 meanpicpp = mbdf$mean[2]
 
-summary(mb)
-meanpir
-meanpicpp
+# For the last graph
+#summary(mb)
+#meanpir
+#meanpicpp
 
 ########## [END] Benchmark ##########
 
