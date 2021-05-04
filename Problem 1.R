@@ -1,7 +1,7 @@
 ######## [START] Requirements ########
 
 ##### Add here the packages needed #############################################
-packagesNeeded <- c("Rcpp", "RcppArmadillo", "microbenchmark")
+packagesNeeded <- c("Rcpp", "RcppArmadillo", "microbenchmark", "multcomp")
 ################################################################################
 
 installedPackages <- installed.packages()
@@ -97,23 +97,39 @@ for(monte_carlo_size_i in 1:l_monte_carlo_size){
 
 ########## [START] Benchmark ##########
 
-mbmark = microbenchmark::microbenchmark(find_pi(B = 10^5, seed = 10), find_pi_cpp(B = 10^5, seed = 10))
+bench <- function (nbmc = 10^5, nbsim = 100, seed = 123) {
+  x <- microbenchmark(find_pi(nbmc, seed), find_pi_cpp(nbmc, seed), times = nbsim, unit = "s")
+  return (summary(x))
+}
 
-mbdf = summary(mbmark)
-
-meanpir = mbdf$mean[1]
-meanpicpp = mbdf$mean[2]
-
-# For the last graph
-#summary(mb)
-#meanpir
-#meanpicpp
+benchmark <- bench()
 
 ########## [END] Benchmark ##########
 
 ########## [START] Graph ##########
 
+graph <- function (uptopower, seed) {
 
+  uptopower <- uptopower+1
+  
+  estim <- matrix(NA, uptopower, 2) 
+
+  for (i in 1:uptopower) {
+    r <- find_pi(10^(i-1), seed)
+    cpp <- find_pi_cpp(10^(i-1), seed)
+    
+    results <- c(r,cpp)
+    
+    estim[i,] <- results
+    name <- paste("1e+", i-1, sep="")
+    rownames(x[i,]) <- name
+  }
+
+  return(estim)
+  
+}
+
+x <- graph(6,10)
 
 ########## [END] Graph ##########
 
