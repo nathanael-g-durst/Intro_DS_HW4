@@ -16,8 +16,8 @@ double find_pi_cpp(const int B, double seed) {
   Rcpp::NumericVector x;
   Rcpp::NumericVector y;
   Rcpp::NumericVector d;
-  x = Rcpp::runif(B);
-  y = Rcpp::runif(B);
+  x = Rcpp::runif(B, -1, 1);
+  y = Rcpp::runif(B, -1, 1);
   d = Rcpp::sqrt(x*x + y*y);
   return 4.0 * sum(d < 1.0) / B;
 }
