@@ -1,7 +1,8 @@
 ######## [START] Requirements ########
 
 ##### Add here the packages needed #############################################
-packagesNeeded <- c("Rcpp", "RcppArmadillo", "microbenchmark", "multcomp")
+packagesNeeded <- c("Rcpp", "RcppArmadillo", "microbenchmark", "multcomp",
+                    "ggplot2")
 ################################################################################
 
 installedPackages <- installed.packages()
@@ -87,6 +88,42 @@ for(monte_carlo_size_i in 1:l_monte_carlo_size){
 
 ########## [START] Graph ##########
 
+graph <- function (uptopower, seed) {
+  
+  uptopower <- uptopower+1
+  
+  estim <- matrix(NA, uptopower, 3,) 
+  
+  for (i in 1:uptopower) {
+    r <- find_pi(10^(i-1), seed)
+    cpp <- find_pi_cpp(10^(i-1), seed)
+    
+    results <- c(i-1, r, cpp)
+    
+    estim[i,] <- results
+    name <- paste("1e+", i-1, sep="")
+  }
+  
+  colnames <- c("Power", "R", "C++")
+  rownames <- paste("1e+", 0:uptopower, sep="")
+  
+  colnames(estim) <- colnames
+  rownames(estim) <- rownames[1:uptopower]
+  
+  return(as.data.frame(estim))
+  
+}
+
+x <- graph(6,10)
+
+# /!\ EDIT PLOT /!\ #
+ggplot(x, aes(x = Power, y = R, group = 1))+ 
+  geom_line(linetype = "solid", color = "black")+
+  geom_point(color = "black")+
+  labs(title = "titlePlot", subtitle = "subtitlePlot")+
+  xlab("Days of the month")+
+  ylab("Number of visitors")
+
 ########## [END] Graph ##########
 
 ######## [END] Check same results ########
@@ -102,34 +139,13 @@ bench <- function (nbmc = 10^5, nbsim = 100, seed = 123) {
   return (summary(x))
 }
 
-benchmark <- bench()
+print(bench())
 
 ########## [END] Benchmark ##########
 
 ########## [START] Graph ##########
 
-graph <- function (uptopower, seed) {
-
-  uptopower <- uptopower+1
-  
-  estim <- matrix(NA, uptopower, 2) 
-
-  for (i in 1:uptopower) {
-    r <- find_pi(10^(i-1), seed)
-    cpp <- find_pi_cpp(10^(i-1), seed)
-    
-    results <- c(r,cpp)
-    
-    estim[i,] <- results
-    name <- paste("1e+", i-1, sep="")
-    rownames(x[i,]) <- name
-  }
-
-  return(estim)
-  
-}
-
-x <- graph(6,10)
+# /!\ EDIT PLOT /!\ #
 
 ########## [END] Graph ##########
 
