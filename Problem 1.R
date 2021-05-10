@@ -84,6 +84,9 @@ for(monte_carlo_size_i in 1:l_monte_carlo_size){
   print(all(res_pi))
 }
 
+rm(all_monte_carlo_size, l_monte_carlo_size, monte_carlo_size,
+   monte_carlo_size_i, pi_cpp, pi_r, res_pi, seed_i, simu_i)
+
 ########## [END] Check same results ##########
 
 ########## [START] Graph ##########
@@ -92,37 +95,53 @@ graph <- function (uptopower, seed) {
   
   uptopower <- uptopower+1
   
-  estim <- matrix(NA, uptopower, 3,) 
+  estim <- matrix(NA, uptopower, 3) 
   
   for (i in 1:uptopower) {
     r <- find_pi(10^(i-1), seed)
     cpp <- find_pi_cpp(10^(i-1), seed)
+    power <- paste("1e+", i-1, sep="")
     
-    results <- c(i-1, r, cpp)
+    results <- c(power, r, cpp)
     
     estim[i,] <- results
     name <- paste("1e+", i-1, sep="")
   }
   
   colnames <- c("Power", "R", "C++")
-  rownames <- paste("1e+", 0:uptopower, sep="")
   
   colnames(estim) <- colnames
-  rownames(estim) <- rownames[1:uptopower]
-  
+
   return(as.data.frame(estim))
   
 }
 
-x <- graph(6,10)
+x <- graph(6,127)
 
-# /!\ EDIT PLOT /!\ #
-ggplot(x, aes(x = Power, y = R, group = 1))+ 
-  geom_line(linetype = "solid", color = "black")+
-  geom_point(color = "black")+
-  labs(title = "titlePlot", subtitle = "subtitlePlot")+
-  xlab("Days of the month")+
-  ylab("Number of visitors")
+par(pty="s")
+
+plot(x = x$Power,
+     y = x$R,
+     log = "x",
+     type = "b",
+     lty = 1,
+     lwd = 3,
+     col = "orange",
+     ylim = c(3.1,4.0),
+     main = "Comparing results from R and Rcpp implementation",
+     xlab = "Number of Monte-Carlo simulations",
+     ylab = expression(hat(pi)))
+
+lines(x = x$Power,
+      y = x$`C++`,
+      type = "b",
+      col = "blue",
+      pch = 16)
+
+legend("topright", legend = c("R", "C++"),
+       col = c("orange", "blue"), lty = 1, lwd = 2:1)
+
+rm(x)
 
 ########## [END] Graph ##########
 
@@ -139,14 +158,56 @@ bench <- function (nbmc = 10^5, nbsim = 100, seed = 123) {
   return (summary(x))
 }
 
-print(bench())
+benchmark <- bench()
+
+print(benchmark)
 
 ########## [END] Benchmark ##########
 
 ########## [START] Graph ##########
 
-# /!\ EDIT PLOT /!\ #
+mat <- matrix(NA, 5, 3)
+
+for (i in 1:5) {
+  benchm <- bench(10^i)
+  r <- benchm$mean[1]
+  cpp <- benchm$mean[2]
+  power <- paste("1e+", i, sep="")
+  
+  results <- c(power, r, cpp)
+  
+  mat[i,] <- results
+  
+}
+
+colnames <- c("Power", "R", "C++")
+
+colnames(mat) <- colnames
+
+mat <- as.data.frame(mat)
+
+rm(benchm, r, cpp, power, i, colnames, results)
+
+plot(x = mat$Power,
+     y = mat$R,
+     log = "x",
+     type = "b",
+     pch = 16,
+     col = "orange",
+     main = "Comparing execution time from R and Rcpp implementation",
+     xlab = "Number of Monte-Carlo simulations",
+     ylab = "Mean execution time (seconds)")
+
+lines(x = mat$Power,
+      y = mat$`C++`,
+      type = "b",
+      col = "blue",
+      pch = 16)
+
+legend("topleft", legend = c("R", "C++"),
+       col = c("orange", "blue"), lty = 1, lwd = 2:1)
 
 ########## [END] Graph ##########
 
 ######## [END] Benchmark ########
+
