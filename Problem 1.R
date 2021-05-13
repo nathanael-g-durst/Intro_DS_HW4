@@ -126,9 +126,11 @@ plot(x = x$Power,
      y = x$R,
      log = "x",
      type = "b",
-     lty = 1,
-     lwd = 3,
-     col = "orange",
+     pch = 21,
+     col = "dark orange",
+     cex = 2,
+     bg = "white",
+     lwd = 2,
      ylim = c(3.1,4.0),
      main = "Comparing results from R and Rcpp implementation",
      xlab = "Number of Monte-Carlo simulations",
@@ -139,11 +141,20 @@ grid()
 lines(x = x$Power,
       y = x$`C++`,
       type = "b",
-      col = "blue",
-      pch = 16)
+      col = "dark blue",
+      pch = 16,
+      cex = 1,
+      bg = "dark blue",
+      lwd = 1)
 
-legend("topright", legend = c("R", "C++"),
-       col = c("orange", "blue"), lty = 1, lwd = 2:1)
+legend("topright",
+       legend = c("R", "C++"),
+       lty = c(1,1),
+       pch = c(21, 16),
+       lwd = 2,
+       inset = 0.05,
+       col = c("dark orange", "dark blue"),
+       bg = c("white","dark blue"),)
 
 rm(x)
 
@@ -196,8 +207,11 @@ plot(x = mat$Power,
      y = mat$R,
      log = "x",
      type = "b",
-     pch = 16,
-     col = "orange",
+     pch = 21,
+     col = "dark orange",
+     cex = 1,
+     bg = "dark orange",
+     lwd = 1,
      main = "Comparing execution time from R and Rcpp implementation",
      xlab = "Number of Monte-Carlo simulations",
      ylab = "Mean execution time (seconds)")
@@ -207,11 +221,19 @@ grid()
 lines(x = mat$Power,
       y = mat$`C++`,
       type = "b",
-      col = "blue",
-      pch = 16)
+      col = "dark blue",
+      pch = 21,
+      cex = 1,
+      bg = "dark blue",
+      lwd = 1)
 
-legend("topleft", legend = c("R", "C++"),
-       col = c("orange", "blue"), lty = 1, lwd = 2:1)
+legend("topleft",
+       legend = c("R", "C++"),
+       col = c("dark orange", "dark blue"),
+       lty = 1,
+       pch = 16,
+       lwd = 2,
+       inset = 0.05)
 
 ########## [END] Graph ##########
 
