@@ -25,6 +25,8 @@ rm(installedPackages, packageName, packagesNeeded, packageExists)
 sourceCpp("find_pi_rcpp.cpp")
 ################################################################################
 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 ######## [END] Requirements ########
 
 ################################################################################
@@ -130,8 +132,9 @@ plot(x = x$Power,
      ylim = c(3.1,4.0),
      main = "Comparing results from R and Rcpp implementation",
      xlab = "Number of Monte-Carlo simulations",
-     ylab = expression(hat(pi)),
-     grid())
+     ylab = expression(hat(pi)))
+
+grid()
 
 lines(x = x$Power,
       y = x$`C++`,
@@ -197,8 +200,9 @@ plot(x = mat$Power,
      col = "orange",
      main = "Comparing execution time from R and Rcpp implementation",
      xlab = "Number of Monte-Carlo simulations",
-     ylab = "Mean execution time (seconds)",
-     grid())
+     ylab = "Mean execution time (seconds)")
+
+grid()
 
 lines(x = mat$Power,
       y = mat$`C++`,
