@@ -21,11 +21,11 @@ for (packageName in packagesNeeded) {
 
 rm(installedPackages, packageName, packagesNeeded, packageExists)
 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 ##### Add here the external files ##############################################
 sourceCpp("find_pi_rcpp.cpp")
 ################################################################################
-
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######## [END] Requirements ########
 
